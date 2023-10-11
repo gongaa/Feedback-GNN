@@ -1,0 +1,25 @@
+.vscode/
+build/
+sionna.egg-info/
+.gitlab/
+__pycache__
+.ipynb_checkpoints
+.pytest_cache
+.DS_Store
+.buildinfo
+.Trash-1000
+.logs
+dev
+_build
+
+doc/build
+# Notebooks copied during doc build
+doc/source/examples/*.ipynb
+
+projects/
+nohup.out
+/*.obj
+
+sionna/fec/ldpc/logs/*
+
+sionna/fec/ldpc/datasets/*
