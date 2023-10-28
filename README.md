@@ -2,114 +2,45 @@
 SPDX-FileCopyrightText: Copyright (c) 2021-2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 SPDX-License-Identifier: Apache-2.0
 -->
-# Sionna: An Open-Source Library for Next-Generation Physical Layer Research
+# Feedback GNN
 
-Sionna&trade; is an open-source Python library for link-level simulations of digital communication systems built on top of the open-source software library [TensorFlow](https://www.tensorflow.org) for machine learning.
+This repo contains the source code of the paper [Graph Neural Networks for Enhanced Decoding of Quantum LDPC Codes](https://arxiv.org/pdf/2304.04743.pdf).
 
-The official documentation can be found [here](https://nvlabs.github.io/sionna/).
+First, I extend the classical error correction simulation framework [Sionna](https://nvlabs.github.io/sionna/) to do quantum error correction. The entire framework is built on top of the open-source software library [TensorFlow](https://www.tensorflow.org) for machine learning.
 
-## Installation
-Sionna requires [Python](https://www.python.org/) and [Tensorflow](https://www.tensorflow.org/).
+Second, I trained an intermediate GNN layer (called feedback GNN) between consecutive quaternary BP runs. This feedback GNN leverages the knowledge from the previous BP run, in order to find a suitable initialization for the next BP run.
+
+Since this extension has not yet been merged into Sionna, you do not need to install Sionna. If you already have Sionna installed, it is recommended to create a new environment where Sionna is not installed and run the notebooks there. 
+
+[Python](https://www.python.org/) and [Tensorflow](https://www.tensorflow.org/) are required.
 In order to run the tutorial notebooks on your machine, you also need [Jupyter](https://jupyter.org/).
-You can alternatively test them on [Google Colab](https://colab.research.google.com/).
-Although not necessary, we recommend running Sionna in a [Docker container](https://www.docker.com).
-
-Sionna requires [TensorFlow 2.8-2.11](https://www.tensorflow.org/install) and Python 3.6-3.9. We recommend Ubuntu 20.04. Earlier versions of TensorFlow (2.7+) still work but are not recommended because of known, unpatched CVEs.
-To run the ray tracer on CPU, [LLVM](https://llvm.org) is required.
+It is recommended to run the demonstration notebooks on GPUs.
 
 We refer to the [TensorFlow GPU support tutorial](https://www.tensorflow.org/install/gpu) for GPU support and the required driver setup.
 
-### Installation using pip
+Once everything is set up, you can run the [examples/QLDPC.ipynb](examples/QLDPC.ipynb) for the demonstration of code construction and binary/quaternary BP decoder.
 
-We recommend to do this within a [virtual environment](https://docs.python.org/3/tutorial/venv.html), e.g., using [conda](https://docs.conda.io).
-On macOS, you need to install [tensorflow-macos](https://github.com/apple/tensorflow_macos) first.
+For the demonstration of the feedback GNN evaluation on the $[[1270,28]]$ code and the $[[882,24]]$ code, please refer to the [examples/n1270.ipynb](examples/n1270.ipynb) and [examples/n882.ipynb](examples/n882.ipynb) notebooks. The two scripts [n1270.py](n1270.py) and [n882.py](n882.py) are for evaluations running on GPUs for days (at small physical error rates).
 
-1.) Install the package
-```
-    pip install sionna
-```
-
-2.) Test the installation in Python
-```
-    python
-```
-```
-    >>> import sionna
-    >>> print(sionna.__version__)
-    0.14.0
-```
-
-3.) Once Sionna is installed, you can run the [Sionna "Hello, World!" example](https://nvlabs.github.io/sionna/examples/Hello_World.html), have a look at the [quick start guide](https://nvlabs.github.io/sionna/quickstart.html), or at the [tutorials](https://nvlabs.github.io/sionna/tutorials.html).
-
-The example notebooks can be opened and executed with [Jupyter](https://jupyter.org/).
-
-For a local installation, the [JupyterLab Desktop](https://github.com/jupyterlab/jupyterlab-desktop) application can be used which also includes the Python installation.
-
-### Docker-based installation
-
-1.) Make sure that you have [Docker](<https://docs.docker.com/engine/install/ubuntu/>) installed on your system. On Ubuntu 20.04, you can run for example
-
-```
-    sudo apt install docker.io
-```
-
-Ensure that your user belongs to the `docker` group (see [Docker post-installation](<https://docs.docker.com/engine/install/linux-postinstall/>))
-
-```
-    sudo usermod -aG docker $USER
-```
-Log out and re-login to load updated group memberships.
-
-For GPU support on Linux, you need to install the [NVIDIA Container Toolkit](https://github.com/NVIDIA/nvidia-docker).
+For training, either you can download the [datasets](https://drive.google.com/drive/folders/1BnjUUDRleT4B3IZQEk-fEYu2wBPQ35Hf?usp=sharing) and put the files under `sionna/fec/ldpc/datasets` and directly follow [examples/Feedback_GNN.ipynb](examples/Feedback_GNN.ipynb) to train on them. Or you can follow [examples/Generate_dataset.ipynb](examples/Generate_dataset.ipynb) to generate your own dataset.
 
 
-2.) Build the Sionna Docker image. From within the Sionna directory, run
+## Directory Layout
+    .
+    ├── examples                        # contains all the jupyter notebooks
+    └── sionna                   
+        ├── channel
+        │   ├── pauli.py                # independent Pauli noise
+        │   └── discrete_channel.py     # Sionna's differentiable BSC
+        └── fec                         # Forward Error Correction
+            └── ldpc                    
+                ├── codes_q.py          # CSS code construction
+                ├── decoding.py         # Sionna's binary BP, add syndrome decoding
+                ├── decoding_q.py       # quaternary BP
+                ├── feedback_gnn.py     # feedback GNN models for training and evaluation
+                ├── weights             # trained feedback GNN model weights
+                ├── datasets            # empty
+                └── gnn.py              # full GNN decoder for QLDPC codes, results not shown in the paper
 
-```
-    make docker
-```
 
-3.) Run the Docker image with GPU support
 
-```
-    make run-docker gpus=all
-```
-or without GPU:
-```
-    make run-docker
-```
-
-This will immediately launch a Docker image with Sionna installed, running Jupyter on port 8888.
-
-4.) Browse through the example notebooks by connecting to [http://127.0.0.1:8888](http://127.0.0.1:8888) in your browser.
-
-### Installation from source
-
-We recommend to do this within a [virtual environment](https://docs.python.org/3/tutorial/venv.html), e.g., using [conda](https://docs.conda.io).
-
-1.) Clone this repository and execute from within its root folder
-```
-    make install
-```
-2.) Test the installation in Python
-```
-    >>> import sionna
-    >>> print(sionna.__version__)
-    0.14.0
-```
-
-## License and Citation
-
-Sionna is Apache-2.0 licensed, as found in the [LICENSE](https://github.com/nvlabs/sionna/blob/main/LICENSE) file.
-
-If you use this software, please cite it as:
-```bibtex
-@article{sionna,
-    title = {Sionna: An Open-Source Library for Next-Generation Physical Layer Research},
-    author = {Hoydis, Jakob and Cammerer, Sebastian and {Ait Aoudia}, Fayçal and Vem, Avinash and Binder, Nikolaus and Marcus, Guillermo and Keller, Alexander},
-    year = {2022},
-    month = {Mar.},
-    journal = {arXiv preprint},
-    online = {https://arxiv.org/abs/2203.11854}
-}
-```
