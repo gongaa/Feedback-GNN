@@ -4,9 +4,9 @@ SPDX-License-Identifier: Apache-2.0
 -->
 # Feedback GNN
 
-This repo contains the source code of the paper [Graph Neural Networks for Enhanced Decoding of Quantum LDPC Codes](https://arxiv.org/pdf/2304.04743.pdf).
+This repo contains the source code of the paper [Graph Neural Networks for Enhanced Decoding of Quantum LDPC Codes](http://arxiv.org/abs/2310.17758).
 
-First, I extend the classical error correction simulation framework [Sionna](https://nvlabs.github.io/sionna/) to do quantum error correction. The entire framework is built on top of the open-source software library [TensorFlow](https://www.tensorflow.org) for machine learning.
+First, I extend the classical error correction simulation framework [Sionna](https://nvlabs.github.io/sionna/) to do quantum communication noise simulation. The entire framework is built on top of the open-source software library [TensorFlow](https://www.tensorflow.org) for machine learning.
 
 Second, I trained an intermediate GNN layer (called feedback GNN) between consecutive quaternary BP runs. This feedback GNN leverages the knowledge from the previous BP run, in order to find a suitable initialization for the next BP run.
 
@@ -18,11 +18,11 @@ It is recommended to run the demonstration notebooks on GPUs.
 
 We refer to the [TensorFlow GPU support tutorial](https://www.tensorflow.org/install/gpu) for GPU support and the required driver setup.
 
-Once everything is set up, you can run the [examples/QLDPC.ipynb](examples/QLDPC.ipynb) for the demonstration of code construction and binary/quaternary BP decoder.
+Once everything is set up, you can run the [examples/QLDPC.ipynb](https://github.com/gongaa/Feedback-GNN/blob/main/examples/QLDPC.ipynb) for the demonstration of code construction and binary/quaternary BP decoder.
 
-For the demonstration of the feedback GNN evaluation on the $[[1270,28]]$ code and the $[[882,24]]$ code, please refer to the [examples/n1270.ipynb](examples/n1270.ipynb) and [examples/n882.ipynb](examples/n882.ipynb) notebooks. The two scripts [n1270.py](n1270.py) and [n882.py](n882.py) are for evaluations running on GPUs for days (at small physical error rates).
+For the demonstration of the feedback GNN evaluation on the $[[1270,28]]$ code and the $[[882,24]]$ code, please refer to the [examples/n1270.ipynb](https://github.com/gongaa/Feedback-GNN/blob/main/examples/n1270.ipynb) and [examples/n882.ipynb](https://github.com/gongaa/Feedback-GNN/blob/main/examples/n882.ipynb) notebooks. The two scripts [n1270.py](https://github.com/gongaa/Feedback-GNN/blob/main/n1270.py) and [n882.py](https://github.com/gongaa/Feedback-GNN/blob/main/n882.py) are for evaluations running on GPUs for days (at small physical error rates).
 
-For training, either you can download the [datasets](https://drive.google.com/drive/folders/1BnjUUDRleT4B3IZQEk-fEYu2wBPQ35Hf?usp=sharing) and put the files under `sionna/fec/ldpc/datasets` and directly follow [examples/Feedback_GNN.ipynb](examples/Feedback_GNN.ipynb) to train on them. Or you can follow [examples/Generate_dataset.ipynb](examples/Generate_dataset.ipynb) to generate your own dataset.
+For training, either you can download the [datasets](https://drive.google.com/drive/folders/1BnjUUDRleT4B3IZQEk-fEYu2wBPQ35Hf?usp=sharing) and put the files under `sionna/fec/ldpc/datasets` and directly follow [examples/Feedback_GNN.ipynb](https://github.com/gongaa/Feedback-GNN/blob/main/examples/Feedback_GNN.ipynb) to train on them. Or you can follow [examples/Generate_dataset.ipynb](https://github.com/gongaa/Feedback-GNN/blob/main/examples/Generate_dataset.ipynb) to generate your own dataset.
 
 
 ## Directory Layout
