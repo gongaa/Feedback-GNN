@@ -265,6 +265,7 @@ class LDPCBPDecoder(Layer):
                  hard_out=True,
                  track_exit=False,
                  num_iter=32,
+                 normalization_factor=1.0,
                  stateful=False,
                  is_syndrome=False,
                  output_dtype=tf.float32,
@@ -310,6 +311,7 @@ class LDPCBPDecoder(Layer):
         self._num_iter = tf.constant(num_iter, dtype=tf.int32)
         self._stateful = stateful
         self._is_syndrome = is_syndrome
+        self._normalization_factor = normalization_factor
         self._output_dtype = output_dtype
 
         # clipping value for the atanh function is applied (tf.float32 is used)
@@ -984,6 +986,9 @@ class LDPCBPDecoder(Layer):
 
             # check node update using the pre-defined function
             msg_cn = self._cn_update(msg_cn, syndrome)
+
+            # using normalization factor (added by me)
+            msg_cn = msg_cn * self._normalization_factor
 
             # track exit decoding trajectory; requires all-zero cw?
             if self._track_exit:
