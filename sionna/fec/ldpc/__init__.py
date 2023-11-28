@@ -14,7 +14,8 @@ from .gnn import GNN_BP4, MLP, save_weights, load_weights
 from .bp_osd import OSD0_Decoder, BP4_OSD_Model, BP2_OSD_Model
 from . import codes
 from .codes_q import create_generalized_bicycle_codes, create_surface_codes,\
-                     create_rotated_surface_codes, create_checkerboard_toric_codes, create_QC_GHP_codes,\
+                     create_rotated_surface_codes, create_checkerboard_toric_codes,\
+                     create_bivariate_QC_codes, create_QC_GHP_codes,\
                      create_circulant_matrix, create_cyclic_permuting_matrix, hypergraph_product,\
                      readAlist, hamming_code, rep_code, css_code
 

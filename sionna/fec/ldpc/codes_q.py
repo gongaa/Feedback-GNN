@@ -1,4 +1,5 @@
 import numpy as np
+from functools import reduce
 from scipy.sparse import identity, hstack, kron, csr_matrix
 from sionna.fec.utils import row_echelon, rank, kernel, compute_code_distance, inverse, int2bin
 
@@ -232,6 +233,18 @@ def create_cyclic_permuting_matrix(n, shifts):
             A[j, (j-i)%n] = s
     return A
         
+def create_bivariate_QC_codes(l, m, A_x_pows, A_y_pows, B_x_pows, B_y_pows, name=None):
+    S_l=create_circulant_matrix(l, [-1])
+    S_m=create_circulant_matrix(m, [-1])
+    x = kron(S_l, identity(m, dtype=int))
+    y = kron(identity(l, dtype=int), S_m)
+    A_list = [x**p for p in A_x_pows] + [y**p for p in A_y_pows]
+    B_list = [x**p for p in B_x_pows] + [y**p for p in B_y_pows]
+    A = reduce(lambda x,y: x+y, A_list).toarray()
+    B = reduce(lambda x,y: x+y, B_list).toarray()
+    hx = np.hstack((A, B))
+    hz = np.hstack((B.T, A.T))
+    return css_code(hx, hz, name=name, name_prefix="IBM")
 
 # For reading in overcomplete check matrices
 def readAlist(directory):
